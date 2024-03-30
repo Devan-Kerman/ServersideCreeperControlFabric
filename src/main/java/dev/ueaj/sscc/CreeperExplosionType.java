@@ -1,6 +1,8 @@
 package dev.ueaj.sscc;
 
-public enum CreeperExplosionTypes {
+public enum CreeperExplosionType {
+	DEFAULT(true, ExplosionType.DAMAGE),
+
 	DESTROY_EXPLOSION(false, ExplosionType.DESTROY),
 	KEEP_EXPLOSION(false, ExplosionType.KEEP),
 	DAMAGE_EXPLOSION(false, ExplosionType.DAMAGE),
@@ -14,13 +16,20 @@ public enum CreeperExplosionTypes {
 	public final boolean firework;
 	public final ExplosionType explode;
 
-	CreeperExplosionTypes(boolean firework, ExplosionType explode_type) {
+	CreeperExplosionType(boolean firework, ExplosionType explode_type) {
 		this.firework = firework;
 		this.explode = explode_type;
 	}
 
+	public boolean realExplodeOnClient() {
+		return this.explode.particles;
+	}
+
 	public enum ExplosionType {
-		NONE(false, false, false), DAMAGE(true, false, false), KEEP(true, true, false), DESTROY(true, true, true);
+		NONE(false, false, false),
+		DAMAGE(true, false, false),
+		KEEP(true, true, false),
+		DESTROY(true, true, true);
 
 		public final boolean damage;
 		public final boolean particles;

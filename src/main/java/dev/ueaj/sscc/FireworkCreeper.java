@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 
 public class FireworkCreeper implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("firework-creeper");
-	public static final GameRules.Key<EnumRule<CreeperExplosionTypes>> EXPLODE_INTO_FIREWORK = GameRuleRegistry.register(
-		"creeperExplodeAsFirework", GameRules.Category.MOBS, GameRuleFactory.createEnumRule(CreeperExplosionTypes.FIREWORK_DAMAGE_EXPLOSION));
+	public static final GameRules.Key<EnumRule<CreeperExplosionType>> EXPLODE_INTO_FIREWORK = GameRuleRegistry.register(
+		"creeperExplosionBehavior", GameRules.Category.MOBS, GameRuleFactory.createEnumRule(CreeperExplosionType.DEFAULT));
 
 	@Override
 	public void onInitialize() {

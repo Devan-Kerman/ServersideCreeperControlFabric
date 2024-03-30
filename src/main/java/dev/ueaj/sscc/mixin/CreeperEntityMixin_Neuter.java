@@ -1,11 +1,12 @@
 package dev.ueaj.sscc.mixin;
 
-import dev.ueaj.sscc.CreeperExplosionTypes;
+import dev.ueaj.sscc.CreeperExplosionType;
 import dev.ueaj.sscc.FireworkCreeper;
-import dev.ueaj.sscc.FireworkManufacturer;
+import dev.ueaj.sscc.FireworkHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
@@ -17,7 +18,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin (CreeperEntity.class)
-public abstract class CreeperEntityMixin_Neuter {
+public abstract class CreeperEntityMixin_Neuter extends LivingEntity {
+	protected CreeperEntityMixin_Neuter(EntityType<? extends LivingEntity> entityType, World world) {
+		super(entityType, world);
+	}
+
 	@Shadow
 	public abstract boolean shouldRenderOverlay();
 
@@ -35,12 +40,14 @@ public abstract class CreeperEntityMixin_Neuter {
 		float power,
 		World.ExplosionSourceType explosionSourceType
 	) {
-		CreeperExplosionTypes types = world.getGameRules().get(FireworkCreeper.EXPLODE_INTO_FIREWORK).get();
+		CreeperExplosionType types = world.getGameRules().get(FireworkCreeper.EXPLODE_INTO_FIREWORK).get();
 		if (types.firework) {
 			boolean charged = this.shouldRenderOverlay();
-			world.addFireworkParticle(x, y, z, 0, 0, 0, FireworkManufacturer.generate(charged));
+
+			FireworkHelper.createFireworkExplosion(world, this, x, y, z, FireworkHelper.generate(charged));
+
 			if (charged) {
-				FireworkManufacturer.generateRandomSpecial();
+				FireworkHelper.createFireworkExplosion(world, this, x, y, z, FireworkHelper.generateRandomSpecial());
 				world.playSound(
 					null, x, y, z, SoundEvents.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, SoundCategory.HOSTILE, 8.0F, 2.0F);
 			} else {
@@ -49,14 +56,6 @@ public abstract class CreeperEntityMixin_Neuter {
 			}
 		}
 
-		if (types.explode.damage) {
-			return world.createExplosion(entity, Explosion.createDamageSource(world, entity), null, x, y, z, power, false,
-				types.explode.destroy ? explosionSourceType : World.ExplosionSourceType.NONE,
-				types.explode.particles, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER,
-				SoundEvents.ENTITY_GENERIC_EXPLODE
-			);
-		} else {
-			return null;
-		}
+		return FireworkHelper.createCreeperExplosion(world, entity, x, y, z, power, explosionSourceType, types);
 	}
 }
