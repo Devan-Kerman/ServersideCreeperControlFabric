@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "sscc",
+	"version": "${version}",
+	"name": "Server Creeper Control",
+	"description": "Makes creeper explosions configurable, explode into fireworks, don't destroy blocks, etc.",
+	"authors": [
+		"ueaj",
+		"MarbleGateKeeper"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/sscc/icon.png",
+	"environment": "server",
+	"entrypoints": {
+		"main": [
+			"dev.ueaj.sscc.FireworkCreeper"
+		]
+	},
+	"mixins": [
+		"sscc.mixins.json"
+	],
+	"depends": {
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
