@@ -14,7 +14,7 @@
 	},
 	"license": "MIT",
 	"icon": "assets/sscc/icon.png",
-	"environment": "server",
+	"environment": "*",
 	"entrypoints": {
 		"main": [
 			"dev.ueaj.sscc.FireworkCreeper"
